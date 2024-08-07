@@ -1,0 +1,152 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Forecast Form</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            background: #e0f2f1; /* Light Green */
+        }
+        header {
+            background: rgb(0, 0, 0, 0.5); /* Peacock Blue Gradient */
+            color: #fff;
+            padding: 20px 0;
+            border-bottom: 5px solid #fc0404; /* Vibrant Green Border */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+        .nav-link {
+            color: #fff !important;
+            text-transform: uppercase;
+            font-size: 16px;
+            padding: 10px 20px;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.2);
+            transition: background 0.3s, color 0.3s;
+        }
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.4);
+            color: #394cc6 !important; /* Green on hover */
+        }
+        .showcase {
+            min-height: 200px;
+            background: url('your-image.jpg') no-repeat center center/cover; /* Replace with your image path */
+            text-align: center;
+            color: #fff;
+            padding: 100px 20px;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 20px;
+            backdrop-filter: blur(10px);
+        }
+        .showcase h1 {
+            font-size: 2em;
+            margin: 0;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 20px;
+            border-radius: 10px;
+            animation: slideIn 1s ease-out;
+        }
+        .showcase p {
+            font-size: 1.5em;
+            margin: 20px 0;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            border-radius: 10px;
+            animation: slideIn 1s ease-out 0.5s;
+        }
+        .btn-custom {
+            color: #fff;
+            background: rgb(0, 0, 0, 0.5); /* Peacock Blue */
+            padding: 12px 25px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 1.2em;
+            transition: background 0.3s, transform 0.3s;
+        }
+        .btn-custom:hover {
+            background: #2f4b7c; /* Darker Blue on hover */
+            transform: scale(1.1);
+        }
+        footer {
+            background: rgb(0, 0, 0, 0.5); /* Peacock Blue */
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+            font-size: 1em;
+            border-top: 5px solid #c63939; /* Vibrant Green Border */
+        }
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        /* Specific style for drug exploration results */
+        .result-text {
+            color: rgb(255, 255, 255); /* Black color for text */
+            text-align: left;
+        }
+        /* Map section */
+        #map-section {
+            padding: 60px 0;
+            background: #fff;
+            text-align: center;
+        }
+        #map {
+            height: 400px;
+        }
+        .btn-custom {
+            display: inline-flex;
+            align-items: center;
+            background: #ff1313;
+        }
+        .btn-custom i {
+            margin-right: 8px; /* Space between icon and text */
+        }
+        .video-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1; /* Ensure the video stays in the background */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Forecast Form</h1>
+    </header>
+    <video class="video-background" autoplay muted loop>
+        <source src="{% static 'videos/bg_video.mp4' %}" type="video/mp4">
+    </video>
+    <div class="showcase">
+        <h1>Forecast Parameters</h1><br>
+        <form action="{% url 'forecast_result' %}" method="post">
+            {% csrf_token %}
+            <label for="drug_name">Drug Name:</label>
+            <input type="text" id="drug_name" name="drug_name" required><br><br>
+            <label for="periods">Forecast Periods:</label>
+            <input type="number" id="periods" name="periods" value="3"><br><br>
+            <input type="submit" value="Get Forecast">
+        </form>
+        <br><br>
+        <a href="/" class="btn-custom">
+            <i class="fas fa-home"></i> Back to home
+        </a>
+    </div>
+    <footer>
+        &copy; 2024 Your Company. All rights reserved.
+    </footer>
+</body>
+</html>

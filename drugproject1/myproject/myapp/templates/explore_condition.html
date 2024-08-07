@@ -1,0 +1,113 @@
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>Explore Condition</title>
+</head>
+<body>
+    <h1>Explore Condition</h1>
+
+    {% if condition_info.conditionName %}
+        <h2>Condition: {{ condition_info.conditionName }}</h2>
+        
+        <h3>Associated Drugs</h3>
+        <ul>
+            {% for drug in condition_info.drugs %}
+                <li>{{ drug }}</li>
+            {% empty %}
+                <li>No associated drugs found.</li>
+            {% endfor %}
+        </ul>
+        
+        <h3>Top Reviews</h3>
+        <ul>
+            {% for review in condition_info.top_reviews %}
+                <li>{{ review }}</li>
+            {% empty %}
+                <li>No reviews found for this condition.</li>
+            {% endfor %}
+        </ul>
+        
+        <h3><a href="{% url 'more_condition_info' %}?condition_name={{ condition_info.conditionName }}">View More</a></h3>
+    {% else %}
+        <p>No condition information available.</p>
+    {% endif %}
+    
+    <a href="{% url 'home' %}">Back to Home</a>
+</body>
+</html> -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Explore Condition</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <style>
+        body {
+            color: white;
+            background-color: black; /* Set background color to black for contrast */
+        }
+        .highlight {
+            background-color: yellow;
+            color: black;
+        }
+        .btn-custom {
+            display: inline-flex;
+            align-items: center;
+        }
+        .btn-custom i {
+            margin-right: 8px; /* Space between icon and text */
+        }
+        body {
+            color: white;
+            background-color: black; /* Set background color to black for contrast */
+        }
+
+        h1, h2, p, ul, li, button, a {
+            color: white;
+        }
+
+        .btn-custom {
+            color: white;
+        }
+
+        .highlight {
+            background-color: yellow;
+            color: black;
+        }
+        .btn-custom {
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Condition: {{ condition_info.conditionName }}</h1>
+        
+        <h2>Drugs</h2>
+        <ul>
+            {% for drug in condition_info.drugs %}
+                <li>
+                    {{ drug }}
+                    <form action="{% url 'more_drug_info' %}" method="get" style="display: inline;">
+                        <input type="hidden" name="drug_name" value="{{ drug }}">
+                        <button type="submit" class="btn btn-custom">View More</button>
+                    </form>
+                </li>
+            {% empty %}
+                <li>No drugs found.</li>
+            {% endfor %}
+        </ul>
+        
+        <h2>Top Reviews</h2>
+        <ul>
+            {% for review in condition_info.reviews %}
+                <li>{{ review|safe }}</li>
+            {% empty %}
+                <li>No reviews found for this condition.</li>
+            {% endfor %}
+        </ul>
+        
+        <a href="/" class="btn btn-custom">Back to Home</a>
+    </div>
+</body>
+</html>

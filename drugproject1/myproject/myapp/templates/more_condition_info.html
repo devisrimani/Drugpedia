@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drug Information</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <style>
+        .highlight {
+            background-color: yellow;
+        }
+    </style>
+</head>
+<body>
+    <h1>Condition Information</h1>
+    <h2>Drug Name: {{ drug_name }}</h2>
+    
+    <h3>Conditions:</h3>
+    <ul>
+        {% for condition in drug_info.conditions %}
+            <li>{{ condition }}</li>
+        {% empty %}
+            <li>No conditions found.</li>
+        {% endfor %}
+    </ul>
+    
+    <h3>Reviews:</h3>
+    <div>
+        {% if drug_info.reviews %}
+            <ul>
+                {% for review in drug_info.reviews %}
+                    <li>{{ review|safe }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No reviews found.</p>
+        {% endif %}
+    </div>
+
+    <h3>Sentiment Distribution:</h3>
+    <div>
+        <img src="data:image/png;base64,{{ pie_chart }}" alt="Sentiment Distribution Pie Chart">
+        <ul>
+            {% for sentiment, count in distribution.items %}
+                <li>{{ sentiment|title }}: {{ count }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>

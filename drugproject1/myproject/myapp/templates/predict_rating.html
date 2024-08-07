@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Predict Rating</title>
+    <style>
+        .btn-custom {
+            display: inline-flex;
+            align-items: center;
+        }
+        .btn-custom i {
+            margin-right: 8px; /* Space between icon and text */
+        }
+        body {
+            color: white;
+            background-color: black; /* Set background color to black for contrast */
+        }
+
+        h1, h2, p, ul, li, button, a {
+            color: white;
+        }
+
+        /* Additional styles if needed */
+        .btn-custom {
+            color: white;
+        }
+        .result{
+            color: white;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Predicted Rating</h1>
+    <!-- <form method="get" action="{% url 'predict_rating' %}">
+        <label for="review">Review:</label>
+        <input type="text" id="review" name="review" required>
+        <button type="submit">Predict</button>
+    </form>
+    {% if predicted_rating %}
+        <h2>Predicted Rating: {{ predicted_rating }}</h2>
+    {% endif %} -->
+    {% if predicted_rating %}
+        <p>The predicted rating is: {{ predicted_rating }}</p>
+        <div id="result">{% autoescape off %}{{ html_output }}{% endautoescape %}</div>
+        {% if image_base64 %}
+            <img id="feature-image" src="data:image/png;base64,{{ image_base64 }}" alt="Feature Importances"><br>
+        {% endif %}
+    {% else %}
+        <p>No prediction made.</p>
+    {% endif %}
+    <a href="/" class="btn-custom btn-small">
+        <i class="fas fa-home"></i> Back to home
+    </a>
+</body>
+</html>

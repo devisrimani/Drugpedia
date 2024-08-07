@@ -1,0 +1,313 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Drug Review Analysis</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            background: #e0f2f1; /* Light Green */
+        }
+        header {
+            background: rgb(0, 0, 0, 0.5);
+            color: #fff;
+            padding: 20px 0;
+            border-bottom: 5px solid #ff0000;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100px; /* Adjust the height as needed */
+        }
+        .header-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        /* .header-logo {
+            max-width: 100px; /* Adjust the size of the logo as needed
+        } */
+        .nav-link {
+            color: #fff !important;
+            text-transform: uppercase;
+            font-size: 16px;
+            padding: 10px 20px;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.2);
+            transition: background 0.3s, color 0.3s;
+        }
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.4);
+            color: #a4c639 !important; /* Green on hover */
+        }
+        .showcase {
+            min-height: 500px;
+            background: url('your-image.jpg') no-repeat center center/cover; /* Replace with your image path */
+            text-align: center;
+            color: #fff;
+            padding: 100px 20px;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+        .showcase h1 {
+            font-size: 4em;
+            font-family: 'creepster';
+            margin: 0;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 5px;
+            border-radius: 10px;
+            animation: slideIn 1s ease-out;
+        }
+        .showcase p {
+            font-size: 1.5em;
+            margin: 20px 0;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            border-radius: 10px;
+            animation: slideIn 1s ease-out 0.5s;
+        }
+        .btn-custom {
+            color: #fff;
+            background: #ff1313; /* Peacock Blue */
+            background: rgba(255, 0, 0, 0.6);
+            padding: 4px 7px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 1.2em;
+            transition: background 0.3s, transform 0.3s;
+        }
+        .btn-custom:hover {
+            background: #ff0000; /* Darker Blue on hover */
+            transform: scale(1.1);
+        }
+        footer {
+            background: rgb(0, 0, 0, 0.5); /* Peacock Blue */
+            color: #fff;
+            text-align: center;
+            padding: 4px;
+            margin-top: 40px;
+            font-size: 1em;
+            border-top: 5px solid #ff0000; /* Vibrant Green Border */
+        }
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        /* Specific style for drug exploration results */
+        .result-text {
+            color: black; /* Black color for text */
+            text-align: left;
+        }
+        /* Map section */
+        #map-section {
+            padding: 60px 0;
+            background: #fff;
+            text-align: center;
+        }
+        #map {
+            height: 400px;
+        }
+        .video-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1; /* Ensure the video stays in the background */
+        }
+        .input-group {
+            width: 60%;
+            margin: 0 auto; /* Center the input container horizontally */
+        }
+
+        .form-control {
+            width: 100%; /* Ensure the input takes full width of the container */
+        }
+    </style>
+</head>
+<body data-spy="scroll" data-target="#navbar" data-offset="50">
+    <header>
+        <div class="container header-content">
+            <!-- <h1><i class="fas fa-capsules"></i> DRUGPEDIA</h1> -->
+            <img src="{% static 'images/logo4.png' %}" alt="Drugpedia Logo" class="header-logo">
+            <!-- <h1><i class="fas fa-capsules"></i> DRUGPEDIA</h1> -->
+        </div>
+    </header>
+    <video class="video-background" autoplay muted loop>
+        <source src="{% static 'videos/bg_video.mp4' %}" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <div class="showcase">
+        <div class="container">
+            <h1>Welcome to Drug Review Analysis</h1>
+            <p>Explore drug reviews with advanced AI/ML tools and gain actionable insights.</p>
+            <a href="{% url 'feedback_form' %}" class="btn btn-custom mt-3">Give Feedback</a><br><br>
+            <form class="mb-3" action="{% url 'predict_condition' %}" method="get" onsubmit="showResult(event, 'conditionResult');">
+                <div class="input-group">
+                    <input type="text" class="form-control" name="review" placeholder="Enter review for condition prediction">
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-custom">Predict Condition</button>
+                    </div>
+                </div>
+            </form>
+            <div class="collapse result-text" id="conditionResult">
+                <!-- Condition result will be displayed here -->
+            </div>
+
+            <form class="mb-3" action="{% url 'predict_rating' %}" method="get" onsubmit="showResult(event, 'ratingResult');">
+                <div class="input-group">
+                    <input type="text" class="form-control" name="review" placeholder="Enter review for rating prediction">
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-custom">Predict Rating</button>
+                    </div>
+                </div>
+            </form>
+            <div class="collapse result-text" id="ratingResult">
+                <!-- Rating result will be displayed here -->
+            </div>
+
+            <form class="mb-3" action="{% url 'predict_sentiment' %}" method="get" onsubmit="showResult(event, 'sentimentResult');">
+                <div class="input-group">
+                    <input type="text" class="form-control" name="review" placeholder="Enter review for sentiment analysis">
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-custom">Analyze Sentiment</button>
+                    </div>
+                </div>
+            </form>
+            <div class="collapse result-text" id="sentimentResult">
+                <!-- Sentiment result will be displayed here -->
+            </div>
+
+            <form class="mb-3" action="{% url 'explore_drug' %}" method="get" onsubmit="showResult(event, 'drugResult');">
+                <div class="input-group">
+                    <input type="text" class="form-control" name="drug_name" placeholder="Enter drug name to explore">
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-custom">Explore Drug</button>
+                    </div>
+                </div>
+            </form>
+            <div class="collapse result-text" id="drugResult">
+                <!-- Drug exploration result will be displayed here -->
+            </div>
+            <form class="mb-3" action="{% url 'explore_condition' %}" method="get" onsubmit="showResult(event, 'condResult');">
+                <div class="input-group">
+                    <input type="text" class="form-control" name="condition" placeholder="Enter condition name to explore">
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-custom">Explore condition</button>
+                    </div>
+                </div>
+            </form>
+            <div class="collapse result-text" id="condResult">
+                <!-- Condition exploration result will be displayed here -->
+            </div>          
+
+            <form class="mb-3" action="{% url 'download_report' %}" method="get">
+                <div class="input-group">
+                    <input type="text" class="form-control" name="drug_name" placeholder="Enter drug name for report">
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-custom">Generate Report</button>
+                    </div>
+                </div>
+            </form>
+            
+            <div class="collapse result-text" id="reportResult">
+                <!-- Report generation result will be displayed here -->
+            </div>
+            <!-- Link to scroll to the map section -->
+            <a class="btn btn-custom mt-3" href="{% url 'forecast_form' %}">View Map</a>
+
+        </div>
+    </div>
+
+    <!-- Map section -->
+    <section id="map-section">
+        <div class="container">
+            <h2>Drug Spread Map</h2>
+            <div id="map"></div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Drug Review Analysis. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        function showResult(event, resultId) {
+            event.preventDefault();
+            const formData = $(event.target).serialize();
+            $.ajax({
+                url: $(event.target).attr('action'),
+                method: 'GET',
+                data: formData,
+                success: function(response) {
+                    console.log("AJAX Success Response:", response);  // Debugging line
+                    $('#' + resultId).html(response).collapse('show');
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX Error:', status, error);  // Debugging line
+                    $('#' + resultId).html('An error occurred. Please try again.').collapse('show');
+                }
+            });
+        }
+        var map = L.map('map').setView([10.8505, 76.2711], 7); // Center on Kerala
+    
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+    
+        // Tooltip content
+        var tooltipContent = `
+            <strong>Nipha virus spread, Click to know more</strong><br>
+            Acetaminophen (Paracetamol) - Jun-Jul<br>
+            Cephalexin - May-July`
+        ;
+    
+        // Marker with tooltip and popup
+        var marker = L.marker([10.8505, 76.2711]).addTo(map)
+            .bindPopup('<a href="{% url "forecast_form" %}">Click here to know more</a>')
+            .bindTooltip(tooltipContent, {permanent: false, direction: 'top'})
+            .on('click', function () {
+                // Use Django URL template tag
+                var forecastFormUrl = "{% url 'forecast_form' %}";
+                window.location.href = forecastFormUrl;
+            });
+        // Tooltip content for Uttar Pradesh
+        var upTooltipContent = `
+            <strong>Earthquake Alert..!, Click to know more</strong><br>
+            Cetirizine - Jun-Jul<br>
+            Salbutamol Inhalers - Jun-Jul`
+        ;
+        
+        // Marker with tooltip and popup for Uttar Pradesh
+        var upMarker = L.marker([26.8467, 80.9462]).addTo(map)
+            .bindPopup('<a href="{% url "forecast1_form" %}">Click here to know more</a>')
+            .bindTooltip(upTooltipContent, {permanent: false, direction: 'top'})
+            .on('click', function () {
+                var forecastFormUrl = "{% url 'forecast1_form' %}";
+                window.location.href = forecastFormUrl;
+            });
+    </script>
+    
+    
+</body>
+</html>

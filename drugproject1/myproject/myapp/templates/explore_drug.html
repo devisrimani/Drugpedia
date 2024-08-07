@@ -1,0 +1,132 @@
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>Drug Exploration Result</title>
+    <style>
+        .btn-custom {
+            display: inline-flex;
+            align-items: center;
+        }
+        .btn-custom i {
+            margin-right: 8px; /* Space between icon and text */
+        }
+        body {
+            color: white;
+            background-color: black; /* Set background color to black for contrast */
+        }
+
+        h1, h2, p, ul, li, button, a {
+            color: white;
+        }
+
+        /* Additional styles if needed */
+        .btn-custom {
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>Drug Exploration Result</h1>
+    <p><strong>Drug Information:</strong> {{ drug_info.drugName }}</p>
+
+    <h2>Conditions associated with {{ drug_info.drugName }}:</h2>
+    {% if drug_info.conditions %}
+        <ul>
+            {% for condition in drug_info.conditions %}
+                <li>{{ condition }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No conditions found for this drug.</p>
+    {% endif %}
+
+    <h2>Reviews for {{ drug_info.drugName }}:</h2>
+    {% if drug_info.reviews %}
+        <ul>
+            {% for review in drug_info.reviews %}
+                <li>{{ review }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No reviews found for this drug.</p>
+    {% endif %}
+    
+    <form action="{% url 'more_drug_info' %}" method="get">
+        <input type="hidden" name="drug_name" value="{{ drug_info.drugName }}">
+        <button type="submit">View More</button>
+    </form>
+
+    <a href="/" class="btn-custom">
+        <i class="fas fa-home"></i> Back to home
+    </a>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Drug Exploration Result</title>
+    <style>
+        .btn-custom {
+            display: inline-flex;
+            align-items: center;
+        }
+        .btn-custom i {
+            margin-right: 8px; /* Space between icon and text */
+        }
+        body {
+            color: white;
+            background-color: black; /* Set background color to black for contrast */
+        }
+
+        h1, h2, p, ul, li, button, a {
+            color: white;
+        }
+
+        .btn-custom {
+            color: white;
+        }
+
+        .highlight {
+            background-color: yellow;
+            color: black;
+        }
+    </style>
+</head>
+<body>
+    <h1>Drug Exploration Result</h1>
+    <p><strong>Drug Information:</strong> {{ drug_info.drugName }}</p>
+
+    <h2>Conditions associated with {{ drug_info.drugName }}:</h2>
+    {% if drug_info.conditions %}
+        <ul>
+            {% for condition in drug_info.conditions %}
+                <li>{{ condition }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No conditions found for this drug.</p>
+    {% endif %}
+
+    <h2>Reviews for {{ drug_info.drugName }}:</h2>
+    {% if drug_info.reviews %}
+        <ul>
+            {% for review in drug_info.reviews %}
+                <li>{{ review|safe }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No reviews found for this drug.</p>
+    {% endif %}
+    
+    <form action="{% url 'more_drug_info' %}" method="get">
+        <input type="hidden" name="drug_name" value="{{ drug_info.drugName }}">
+        <button type="submit">View More</button>
+    </form>
+
+    <a href="/" class="btn-custom">
+        <i class="fas fa-home"></i> Back to home
+    </a>
+</body>
+</html>

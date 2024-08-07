@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Predict Sentiment</title>
+    <style>
+        .btn-custom {
+            display: inline-flex;
+            align-items: center;
+        }
+        .btn-custom i {
+            margin-right: 8px; /* Space between icon and text */
+        }
+        body {
+            color: white;
+            background-color: rgb(255, 255, 255); /* Set background color to black for contrast */
+        }
+
+        h1, h2, p, ul, li, button, a {
+            color: white;
+        }
+
+        /* Additional styles if needed */
+        .btn-custom {
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>Predicted Sentiment</h1>
+    {% if sentiment %}
+        <p>The sentiment is: {{ sentiment }}</p>
+    {% else %}
+        <p>No sentiment analysis made.</p>
+    {% endif %}
+    <a href="/" class="btn-custom btn-small">
+        <i class="fas fa-home"></i> Back to home
+    </a>
+</body>
+</html>

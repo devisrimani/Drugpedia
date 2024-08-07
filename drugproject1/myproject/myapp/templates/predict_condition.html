@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Predict Condition</title>
+    <style>
+        .btn-custom {
+            display: inline-flex;
+            align-items: center;
+        }
+        .btn-custom i {
+            margin-right: 8px; /* Space between icon and text */
+        }
+        body {
+            color: white;
+            background-color: black; /* Set background color to black for contrast */
+        }
+
+        h1, h2, p, ul, li, button, a {
+            color: white;
+        }
+
+        /* Additional styles if needed */
+        .btn-custom {
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>Predicted Condition</h1>
+    <!-- <form method="get" action="{% url 'predict_condition' %}">
+        <label for="review">Review:</label>
+        <input type="text" id="review" name="review" required>
+        <button type="submit">Predict</button>
+    </form> -->
+    {% if predicted_condition %}
+        <p>The predicted condition is: {{ predicted_condition }}</p>
+    {% else %}
+        <p>No prediction made.</p>
+    {% endif %}
+    <a href="/" class="btn-custom btn-small">
+        <i class="fas fa-home"></i> Back to home
+    </a>
+</body>
+</html>
